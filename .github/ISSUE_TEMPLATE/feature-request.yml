@@ -1,0 +1,12 @@
+name: Пожелание или предложение
+description: Создать заявку с пожеланием или предложением относительно FAQ
+labels: [feature request]
+body:
+  - type: textarea
+    id: feature-request
+    attributes:
+      label: Текст пожелания или предложения
+      description: >-
+        Подробно опишите, что бы вы хотели видеть в данном FAQ в будущем.
+    validations:
+      required: true
