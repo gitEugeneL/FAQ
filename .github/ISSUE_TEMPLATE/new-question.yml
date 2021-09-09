@@ -1,0 +1,12 @@
+name: Добавление нового вопроса
+description: Создать заявку на включение нового вопроса в FAQ
+labels: [new question]
+body:
+  - type: textarea
+    id: new-question
+    attributes:
+      label: Текст для нового вопроса
+      description: >-
+        Укажите вопрос, ответ на который вы хотели бы видеть в FAQ.
+    validations:
+      required: true
