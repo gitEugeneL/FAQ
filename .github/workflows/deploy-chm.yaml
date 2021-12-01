@@ -1,0 +1,42 @@
+name: CHM deploy
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build-and-deploy:
+    name: Build and deploy CHM
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ['3.10']
+    steps:
+      - name: Fetching sources from repository
+        uses: actions/checkout@v2
+      - name: Setting up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Installing Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install sphinx
+        shell: cmd
+      - name: Installing HTML Help Workshop
+        uses: crazy-max/ghaction-chocolatey@v1
+        with:
+          args: install html-help-workshop
+      - name: Building HTML using Sphinx
+        run: |
+          make htmlhelp
+        shell: cmd
+      - name: Compiling CHM using HTML Help Workshop
+        run: |
+          "%ProgramFiles(x86)%\HTML Help Workshop\hhc.exe" build\htmlhelp\fedora-faq-ru.hhp && exit /b 1 || exit /b 0
+        shell: cmd
+      - name: Uploading built CHM artifact to releases
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build\htmlhelp\fedora-faq-ru.chm
